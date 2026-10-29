@@ -13,3 +13,16 @@ A Flutter-based mobile application for managing sales, inventory, and transactio
 **Backend:**
 ![Laravel](https://img.shields.io/badge/laravel-%23FF2D20.svg?style=for-the-badge&logo=laravel&logoColor=white)
 ![MySQL](https://img.shields.io/badge/mysql-%2300f.svg?style=for-the-badge&logo=mysql&logoColor=white)
+
+## Tech Version
+- Flutter SDK (versi 3.0 up)
+- Laravel (versi 13)
+
+
+#### 6. Contact
+```markdown
+## Author
+
+**Sofyan Umardi**
+- LinkedIn: www.linkedin.com/in/sofyann-umardii
+- Email: sofyannumardii@gmail.com
