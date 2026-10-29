@@ -24,6 +24,20 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   bool _obscureConfirmPassword = true;
   bool _isLoading = false;
 
+  final FocusNode _passwordFocusNode = FocusNode();
+  bool _isPasswordFocused = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Mendengarkan perubahan fokus
+    _passwordFocusNode.addListener(() {
+      setState(() {
+        _isPasswordFocused = _passwordFocusNode.hasFocus;
+      });
+    });
+  }
+
   @override
   void dispose() {
     _usernameController.dispose();
@@ -31,6 +45,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     _phoneController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
+    _passwordFocusNode.dispose();
     super.dispose();
   }
 
@@ -102,7 +117,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
               color: const Color(0xFF2196F3).withValues(alpha: 0.3),
-              borderRadius: BorderRadius.circular(28),
+              borderRadius: BorderRadius.circular(10),
               border: Border.all(color: Colors.white.withValues(alpha: 0.8)),
             ),
             child: Form(
@@ -186,6 +201,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   TextFormField(
                     controller: _passwordController,
                     obscureText: _obscurePassword,
+                    focusNode: _passwordFocusNode,
                     validator: FormValidator.password,
                     decoration: InputDecoration(
                       hintText: 'Password',
@@ -213,7 +229,40 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         },
                       ),
                     ),
+                    onChanged: (value) {
+                      setState(() {});
+                    },
                   ),
+                  if (_isPasswordFocused)
+                    Container(
+                      margin: const EdgeInsets.only(
+                        top: 8,
+                      ), // Jarak dari TextField
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.blue.shade50,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Colors.blue.shade200),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildRequirement(
+                            'Minimal 8 karakter',
+                            _passwordController.text.length >= 8,
+                          ),
+                          _buildRequirement(
+                            'Mengandung huruf besar',
+                            _passwordController.text.contains(RegExp(r'[A-Z]')),
+                          ),
+                          _buildRequirement(
+                            'Mengandung angka',
+                            _passwordController.text.contains(RegExp(r'[0-9]')),
+                          ),
+                        ],
+                      ),
+                    ),
+
                   const SizedBox(height: 10),
 
                   // Field Confirm Password
@@ -309,9 +358,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              Navigator.popAndPushNamed(
+                              Navigator.pushReplacement(
                                 context,
-                                '/loginScreen',
+                                MaterialPageRoute(
+                                  builder: (_) => const LoginScreen(),
+                                ),
                               );
                             },
                         ),
@@ -323,6 +374,29 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildRequirement(String text, bool isMet) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 4),
+      child: Row(
+        children: [
+          Icon(
+            isMet ? Icons.check_circle : Icons.radio_button_unchecked,
+            color: isMet ? Colors.green : Colors.grey,
+            size: 16,
+          ),
+          const SizedBox(width: 8),
+          Text(
+            text,
+            style: TextStyle(
+              fontSize: 12,
+              color: isMet ? Colors.green.shade700 : Colors.grey.shade700,
+            ),
+          ),
+        ],
       ),
     );
   }

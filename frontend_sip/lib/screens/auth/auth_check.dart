@@ -1,3 +1,7 @@
+import 'package:flutter/material.dart';
+import 'package:sistem_informasi_penjualan/screens/screens.dart';
+import 'package:sistem_informasi_penjualan/services/services.dart';
+
 class AuthCheck extends StatefulWidget {
   const AuthCheck({super.key});
 

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:sistem_informasi_penjualan/helpers/storage_helper.dart';
 import 'package:sistem_informasi_penjualan/models/models.dart';
-import 'package:sistem_informasi_penjualan/services/api_services.dart';
+import 'package:sistem_informasi_penjualan/services/services.dart';
 
 class AuthProvider extends ChangeNotifier {
   UserModel? _user;
@@ -190,7 +190,7 @@ class AuthProvider extends ChangeNotifier {
           _isLoggedIn = true;
           _isLoading = false;
 
-          await _saveLoginData(rememberMe);
+          await _saveLoginData();
           notifyListeners();
 
           print('✅ Login berhasil! Token: $token');
@@ -227,17 +227,21 @@ class AuthProvider extends ChangeNotifier {
   }
 
   // SIMPAN DATA LOGIN
-  Future<void> _saveLoginData(bool rememberMe) async {
-    if (rememberMe && _token != null) {
-      await StorageHelper.saveToken(_token!);
+  Future<List<dynamic>> _saveLoginData() async {
+    final token = await AuthService().getToken();
 
-      if (_user != null) {
-        await StorageHelper.saveUser(_user!.toJson());
-      }
+    final response = await http.get(
+      Uri.parse('${AuthService().baseUrl}/notes'),
+      headers: {
+        'Authorization': 'Bearer $token', // <-- INI KUNCINYA
+        'Accept': 'application/json',
+      },
+    );
 
-      await StorageHelper.setRememberMe(true);
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
     } else {
-      await StorageHelper.clearAll();
+      throw Exception('Gagal mengambil notes');
     }
   }
 

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:sistem_informasi_penjualan/providers/auth_provider.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
@@ -12,7 +14,7 @@ class _SettingScreenState extends State<SettingScreen> {
 
   void _goToProfile() => Navigator.pushNamed(context, '/profile');
   void _goToStoreProfile() => Navigator.pushNamed(context, '/storeProfile');
-  void _logOut() {}
+  // void _logOut() {}
 
   @override
   void initState() {
@@ -21,12 +23,13 @@ class _SettingScreenState extends State<SettingScreen> {
       MenuSetting(Icons.person, 'Profil', _goToProfile),
       MenuSetting(Icons.store, 'Profil Warung', _goToStoreProfile),
       MenuSetting(Icons.account_circle, 'Profil', _goToProfile),
-      MenuSetting(Icons.logout, 'Keluar', _logOut),
+      // MenuSetting(Icons.logout, 'Keluar', _logOut),
     ];
   }
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = context.watch<AuthProvider>();
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -35,6 +38,9 @@ class _SettingScreenState extends State<SettingScreen> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              Container(
+                child: Text(authProvider.user?.username?? "Tidak ada user"),
+              ),
               ListView.separated(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
@@ -65,7 +71,35 @@ class _SettingScreenState extends State<SettingScreen> {
                     showDialog(
                       context: context,
                       builder: (context) {
-                        return AlertDialog(title: Text('Konfirmasi Keluar'));
+                        return AlertDialog(
+                          title: Text(
+                            'Konfirmasi Keluar',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                          content: Text('Apakah anda yakin ingin keluar?'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text('Tidak'),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                context
+                                    .read<AuthProvider>().logout();
+
+                                if (context.mounted) {
+                                  Navigator.pushReplacementNamed(
+                                    context,
+                                    '/loginScreen',
+                                  );
+                                }
+                              },
+                              child: Text('Ya'),
+                            ),
+                          ],
+                        );
                       },
                     );
                   },
