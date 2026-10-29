@@ -19,7 +19,7 @@ A Flutter-based mobile application for managing sales, inventory, and transactio
 - Laravel (versi 13)
 
 
-#### 6. Contact
+#### Contact
 ```markdown
 ## Author
 
