@@ -23,35 +23,6 @@ class ProductCardList extends StatefulWidget {
 }
 
 class _ProductCardListState extends State<ProductCardList> {
-  Future<void> _showWeightDialog(
-    ProductModel product,
-    CartProvider cartProvider,
-  ) async {
-    await showDialog<bool>(
-      context: context,
-      builder: (context) => DynamicFormDialog(
-        title: 'Jumlah ${product.nameProduct}',
-        fields: [
-          FormFieldConfig(
-            key: 'Weight',
-            label: 'Jumlah (${product.unit})',
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            isRequired: true,
-            initialValue: '',
-          ),
-        ],
-        onSubmit: (Map<String, dynamic> values) async {
-          final weightStr = values['Weight'] as String? ?? '0';
-          final weight = double.tryParse(weightStr) ?? 0;
-
-          if (weight <= 0) return false;
-
-          cartProvider.setQuantity(product, weight);
-          return true;
-        },
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,10 +36,9 @@ class _ProductCardListState extends State<ProductCardList> {
       itemCount: widget.products.length,
       itemBuilder: (context, index) {
         final product = widget.products[index];
-        final qtyCart = cartProvider.getQuantity(product).toInt();
+        cartProvider.getQuantity(product).toInt();
 
-        final categoryUnit = UnitData.getCategory(product.unit.value);
-        final isWeight = categoryUnit == 'Berat';
+        UnitData.getCategory(product.unit.value);
         return Container(
           decoration: BoxDecoration(
             border: Border.all(),

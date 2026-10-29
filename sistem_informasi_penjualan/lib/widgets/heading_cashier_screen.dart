@@ -23,7 +23,6 @@ class HeadingCashierScreen extends StatefulWidget {
 class _HeadingCashierScreenState extends State<HeadingCashierScreen> {
   int? selectedCategoryIndex;
   final TextEditingController _searchController = TextEditingController();
-  final bool _isProcessingScan = false;
 
   @override
   void dispose() {
@@ -107,66 +106,6 @@ class _HeadingCashierScreenState extends State<HeadingCashierScreen> {
     );
 
     // HANDLE SCAN
-    Future<void> _handleBarcodeScan(String barcode) async {
-      if (_isProcessingScan) {
-        debugPrint('⚠️ Skip, masih proses');
-        return;
-      }
-      try {
-        final productProvider = context.read<ProductProvider>();
-        final cartProvider = context.read<CartProvider>();
-
-        final product = productProvider.getProductByBarcode(barcode);
-        if (product != null) {
-          // TAMBAH ITEM (BUAT SCAN)
-          cartProvider.addProductFromScan(product);
-        }
-
-        if (product == null) {
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  '❌ Produk dengan barcode $barcode tidak ditemukan',
-                ),
-                backgroundColor: Colors.red,
-              ),
-            );
-          }
-          return;
-        }
-
-        // CEK STOK
-        if (product.stock <= 0) {
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('❌ Stok ${product.nameProduct} habis!'),
-                backgroundColor: Colors.red,
-              ),
-            );
-          }
-          return;
-        }
-
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('✅ ${product.nameProduct} ditambahkan ke cart'),
-              backgroundColor: Colors.green,
-              duration: const Duration(seconds: 1),
-            ),
-          );
-        }
-      } catch (e) {
-        debugPrint('❌ Error scan: $e');
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('❌ Error: $e'), backgroundColor: Colors.red),
-          );
-        }
-      }
-    }
   }
 
   @override

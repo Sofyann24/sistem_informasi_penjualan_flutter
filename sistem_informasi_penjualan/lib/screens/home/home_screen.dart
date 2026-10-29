@@ -1,8 +1,6 @@
 import 'package:curve_clipper/curve_clipper.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
-import 'package:sistem_informasi_penjualan/providers/providers.dart';
 import 'package:sistem_informasi_penjualan/utils/utils.dart';
 import 'package:sistem_informasi_penjualan/widgets/widgets.dart';
 

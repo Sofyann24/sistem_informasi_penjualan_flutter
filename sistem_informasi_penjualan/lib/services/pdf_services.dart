@@ -4,7 +4,6 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'package:intl/intl.dart';
 import 'package:sistem_informasi_penjualan/models/models.dart';
-import 'package:sistem_informasi_penjualan/providers/cart_provider.dart';
 
 // PDF RECEIPT
 class PdfServices {

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sistem_informasi_penjualan/models/models.dart';
-import 'package:sistem_informasi_penjualan/providers/product_provider.dart';
 import 'package:sistem_informasi_penjualan/services/api_services.dart';
 
 class TransactionProvider extends ChangeNotifier {
@@ -56,7 +55,7 @@ class TransactionProvider extends ChangeNotifier {
           'total_items': totalItems,
           'payment_method': paymentMethod,
           'status': status,
-          if (notes != null) 'notes': notes,
+          'notes': ?notes,
           'items': items,
         },
       );
@@ -95,7 +94,7 @@ class TransactionProvider extends ChangeNotifier {
   num get profitPerToday {
     final now = DateTime.now();
 
-    final todayTransac = _transactions.where((item) {
+    _transactions.where((item) {
       return item.createdAt.year == now.year &&
           item.createdAt.month == now.month &&
           item.createdAt.day == now.day;
